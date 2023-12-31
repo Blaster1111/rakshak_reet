@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Spacer(),
                 Text(
-                  "Rakshakરીત",
+                  "Rakshakरीत",
                   style: TextStyle(
                     color: Colors.orange,
                     fontStyle: FontStyle.italic,

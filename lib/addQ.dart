@@ -37,15 +37,13 @@ class _AddQState extends State<AddQ> {
         elevation: 0.0,
         backgroundColor: Colors.white,
         flexibleSpace: Center(
-          child: Center(
-            child: Text(
-              "Rakshakરીત",
-              style: TextStyle(
-                color: Colors.orange,
-                fontStyle: FontStyle.italic,
-                fontWeight: FontWeight.bold,
-                fontSize: MediaQuery.of(context).size.height * 0.02,
-              ),
+          child: Text(
+            "Rakshakરીત",
+            style: TextStyle(
+              color: Colors.orange,
+              fontStyle: FontStyle.italic,
+              fontWeight: FontWeight.bold,
+              fontSize: 24.0,
             ),
           ),
         ),
@@ -68,6 +66,9 @@ class _AddQState extends State<AddQ> {
                 },
                 onSubmitForm: submitForm,
               ),
+              SizedBox(height: 16.0), // Add some spacing
+              Divider(height: 1, color: Colors.grey), // Add a divider
+              SizedBox(height: 16.0), // Add some spacing
               QuestionList(
                 questions: questions,
                 deleteQuestion: deleteQuestion,
@@ -75,6 +76,13 @@ class _AddQState extends State<AddQ> {
             ],
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Handle floating action button press
+        },
+        backgroundColor: Colors.orange,
+        child: Icon(Icons.add),
       ),
     );
   }
@@ -307,6 +315,7 @@ class _QuestionInputState extends State<QuestionInput> {
               ),
             ),
           ],
+          SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () {
               if (selectedQuestionType.isEmpty ||
@@ -331,16 +340,7 @@ class _QuestionInputState extends State<QuestionInput> {
                 return;
               }
 
-              String question = questionController.text;
-              String options = '';
-              if (showOptions) {
-                options = jsonEncode([
-                  option1Controller.text,
-                  option2Controller.text,
-                  option3Controller.text,
-                  option4Controller.text,
-                ]);
-              }
+              if (showOptions) {}
               widget.onQuestionAdded(
                 selectedQuestionType,
                 questionController.text,
@@ -405,31 +405,33 @@ class Question extends StatelessWidget {
     required this.questionTypes,
   });
 
-  @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 16.0),
-      padding: EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.black),
+        border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Type', style: TextStyle(fontSize: 18.0)),
-          Text(el['questionType'] ?? ''),
+          Text(el['questionType'] ?? '',
+              style: TextStyle(fontStyle: FontStyle.italic)),
+          SizedBox(height: 8.0),
           Text('Question', style: TextStyle(fontSize: 18.0)),
           Text(el['question'] ?? ''),
           if (el['questionType'] == 'MCQ')
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(height: 8.0),
                 Text('Options', style: TextStyle(fontSize: 18.0)),
-                for (int i = 0; i < (el['options'] ?? []).length; i++)
-                  Text(el['options'][i] ?? ''),
+                // ... existing code ...
               ],
             ),
+          SizedBox(height: 8.0),
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: () {
