@@ -40,8 +40,23 @@ class _addQDefaultState extends State<addQDefault> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 250, 226, 198),
       appBar: AppBar(
-        title: Text('Default Template'),
+        elevation: 0.0,
+        backgroundColor: Color.fromARGB(255, 250, 226, 198),
+        flexibleSpace: Center(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: Text(
+              "Default Feedback Form",
+              style: TextStyle(
+                color: Colors.orange,
+                fontWeight: FontWeight.bold,
+                fontSize: MediaQuery.of(context).size.height * 0.04,
+              ),
+            ),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
@@ -56,7 +71,11 @@ class _addQDefaultState extends State<addQDefault> {
                   });
                 },
               ),
-            ElevatedButton(onPressed: () => {}, child: Text("Update")),
+            ElevatedButton(
+                onPressed: () => {},
+                child: Text(
+                  "Update",
+                )),
           ],
         ),
       ),
@@ -112,6 +131,7 @@ class _QuestionInputState extends State<QuestionInput> {
       margin: EdgeInsets.only(bottom: 16.0),
       padding: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
+        color: Colors.white, // Set the background color to white
         border: Border.all(color: Colors.black),
         borderRadius: BorderRadius.circular(8.0),
       ),

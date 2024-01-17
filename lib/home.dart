@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'package:rakshak_reet/addQDefault.dart';
 import 'package:flutter/material.dart';
 import 'package:rakshak_reet/addQCustomisable.dart';
+import 'package:rakshak_reet/auth/authOption.dart';
+import 'package:rakshak_reet/auth/singup.dart';
 import 'package:rakshak_reet/homeDesc.dart';
-import 'package:rakshak_reet/singup.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -101,6 +103,7 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Color.fromARGB(255, 250, 226, 198),
           title: Text('Feedback Form'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -153,12 +156,13 @@ class _HomePageState extends State<HomePage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color.fromARGB(255, 250, 226, 198),
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Colors.white,
+        backgroundColor: Color.fromARGB(255, 250, 226, 198),
         flexibleSpace: Center(
-          child: Center(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(0, 25, 0, 0),
             child: Row(
               children: [
                 Spacer(),
@@ -166,7 +170,6 @@ class _HomePageState extends State<HomePage> {
                   "Rakshakरीत",
                   style: TextStyle(
                     color: Colors.orange,
-                    fontStyle: FontStyle.italic,
                     fontWeight: FontWeight.bold,
                     fontSize: MediaQuery.of(context).size.height * 0.02,
                   ),
@@ -174,7 +177,10 @@ class _HomePageState extends State<HomePage> {
                 Spacer(),
                 IconButton(
                   color: Colors.black,
-                  icon: Icon(Icons.logout),
+                  icon: Icon(
+                    Icons.logout,
+                    size: MediaQuery.sizeOf(context).height * 0.02,
+                  ),
                   onPressed: () {
                     signOut();
                   },
@@ -187,7 +193,7 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             child: searchBar(onSearch),
           ),
           Expanded(
@@ -208,15 +214,21 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                   child: Card(
-                    margin: EdgeInsets.all(16),
+                    margin: EdgeInsets.fromLTRB(16, 8, 16, 8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
                     child: Row(
                       children: [
                         if (station['qr'] != null)
-                          Image.network(
-                            station['qr'],
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Image.network(
+                              station['qr'],
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         SizedBox(width: 16),
                         Expanded(
@@ -242,23 +254,37 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Spacer(),
-                FloatingActionButton(
-                  onPressed: () {
-                    _showAddDialog(context);
-                  },
-                  backgroundColor: Colors.orange,
-                  child: Icon(Icons.add),
+        ],
+      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              _showAddDialog(context);
+            },
+            backgroundColor: Colors.orange,
+            heroTag: null,
+            child: Icon(Icons.add),
+          ),
+          SizedBox(height: 16),
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext) => authOption(),
                 ),
-              ],
-            ),
+              );
+            },
+            backgroundColor: Colors.orange,
+            heroTag: null,
+            child: Icon(Icons.person),
           ),
         ],
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
     );
   }
 

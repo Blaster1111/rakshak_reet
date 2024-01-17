@@ -291,13 +291,14 @@ class _HomeDescState extends State<HomeDesc> {
     filteredFeedbackCountsList.sort((a, b) => a.day.compareTo(b.day));
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color.fromARGB(255, 250, 226, 198),
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Colors.white,
+        backgroundColor: Color.fromARGB(255, 250, 226, 198),
         flexibleSpace: Center(
           child: Center(
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.2,
@@ -305,7 +306,7 @@ class _HomeDescState extends State<HomeDesc> {
                 Text(
                   stationName,
                   style: TextStyle(
-                    color: Colors.black,
+                    color: Colors.orange,
                     fontStyle: FontStyle.italic,
                     fontWeight: FontWeight.bold,
                     fontSize: MediaQuery.of(context).size.height * 0.02,

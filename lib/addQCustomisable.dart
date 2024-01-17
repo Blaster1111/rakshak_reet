@@ -33,17 +33,20 @@ class _AddQState extends State<AddQ> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 250, 226, 198),
       appBar: AppBar(
         elevation: 0.0,
-        backgroundColor: Colors.white,
+        backgroundColor: Color.fromARGB(255, 250, 226, 198),
         flexibleSpace: Center(
-          child: Text(
-            "Rakshakરીત",
-            style: TextStyle(
-              color: Colors.orange,
-              fontStyle: FontStyle.italic,
-              fontWeight: FontWeight.bold,
-              fontSize: 24.0,
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: Text(
+              "Customisable Feedback Form",
+              style: TextStyle(
+                color: Colors.orange,
+                fontWeight: FontWeight.bold,
+                fontSize: MediaQuery.of(context).size.height * 0.04,
+              ),
             ),
           ),
         ),
@@ -250,6 +253,7 @@ class _QuestionInputState extends State<QuestionInput> {
       margin: EdgeInsets.only(bottom: 16.0),
       padding: EdgeInsets.all(8.0),
       decoration: BoxDecoration(
+        color: Colors.white,
         border: Border.all(color: Colors.black),
         borderRadius: BorderRadius.circular(8.0),
       ),
@@ -410,6 +414,7 @@ class Question extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 16.0),
       padding: EdgeInsets.all(16.0),
       decoration: BoxDecoration(
+        color: Colors.white,
         border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(8.0),
       ),

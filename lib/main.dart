@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter/material.dart';
 import 'package:rakshak_reet/home.dart';
-import 'package:rakshak_reet/singup.dart';
+import 'package:rakshak_reet/auth/singup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
