@@ -1,7 +1,7 @@
 import 'dart:convert';
-
+import 'package:rakshak_reet/addQDefault.dart';
 import 'package:flutter/material.dart';
-import 'package:rakshak_reet/addQ.dart';
+import 'package:rakshak_reet/addQCustomisable.dart';
 import 'package:rakshak_reet/homeDesc.dart';
 import 'package:rakshak_reet/singup.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -84,10 +84,8 @@ class _HomePageState extends State<HomePage> {
   void onSearch(String query) {
     setState(() {
       if (query.isEmpty) {
-        // If the search query is empty, show all police stations
         filteredStations = List.from(policeStations);
       } else {
-        // Filter the stations based on the search query
         filteredStations = policeStations
             .where((station) => station['name']
                 .toString()
@@ -98,7 +96,61 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  @override
+  Future<void> _showAddDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Feedback Form'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  // Navigate to AddQDefault page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => addQDefault(),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.orange, // Set the color to match your theme
+                  fixedSize: Size(200, 40), // Set the width and height
+                ),
+                child: Text(
+                  'Default',
+                  style: TextStyle(color: Colors.white), // Text color
+                ),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  // Navigate to AddQCustomisable page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddQ(),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.orange,
+                  fixedSize: Size(200, 40),
+                ),
+                child: Text(
+                  'Customizable',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -122,9 +174,8 @@ class _HomePageState extends State<HomePage> {
                 Spacer(),
                 IconButton(
                   color: Colors.black,
-                  icon: Icon(Icons.logout), // Add the logout icon
+                  icon: Icon(Icons.logout),
                   onPressed: () {
-                    // Perform sign-out logic here
                     signOut();
                   },
                 ),
@@ -135,72 +186,76 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Column(
         children: [
-          searchBar(onSearch),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: searchBar(onSearch),
+          ),
           Expanded(
             child: ListView.builder(
               itemCount: filteredStations.length,
               itemBuilder: (context, index) {
                 final station = filteredStations[index];
                 return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeDesc(
-                                  stationId: station['_id'],
-                                  stationName: station['name'])));
-                      // Pushing to description page
-                    },
-                    child: Card(
-                      margin: EdgeInsets.all(16),
-                      child: Row(
-                        children: [
-                          // Check if 'qr' is not null before displaying the image
-                          if (station['qr'] != null)
-                            Image.network(
-                              station['qr'],
-                              width: 100,
-                              height: 100,
-                              fit: BoxFit.cover,
-                            ),
-                          SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "${station['name']}",
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                  softWrap:
-                                      true, // Allow text to wrap to the next line
-                                ),
-                                Text(
-                                  "${station['area']}, ${station['district']}, ${station['state']}",
-                                  softWrap:
-                                      true, // Allow text to wrap to the next line
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomeDesc(
+                          stationId: station['_id'],
+                          stationName: station['name'],
+                        ),
                       ),
-                    ));
+                    );
+                  },
+                  child: Card(
+                    margin: EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        if (station['qr'] != null)
+                          Image.network(
+                            station['qr'],
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
+                        SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${station['name']}",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                                softWrap: true,
+                              ),
+                              Text(
+                                "${station['area']}, ${station['district']}, ${station['state']}",
+                                softWrap: true,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
               },
             ),
           ),
-          Row(
-            children: [
-              Spacer(),
-              FloatingActionButton(
-                onPressed: () {
-                  Navigator.push(
-                      context, MaterialPageRoute(builder: (context) => AddQ()));
-                },
-                backgroundColor:
-                    Colors.orange, // Adjust the color to match your app's theme
-                child: Icon(Icons.add),
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                Spacer(),
+                FloatingActionButton(
+                  onPressed: () {
+                    _showAddDialog(context);
+                  },
+                  backgroundColor: Colors.orange,
+                  child: Icon(Icons.add),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -212,17 +267,28 @@ class _HomePageState extends State<HomePage> {
       elevation: 5,
       borderRadius: BorderRadius.circular(30),
       shadowColor: const Color(0x55434343),
-      child: TextField(
-        onChanged: onSearch,
-        textAlign: TextAlign.start,
-        textAlignVertical: TextAlignVertical.center,
-        decoration: InputDecoration(
-          hintText: "Search",
-          prefixIcon: Icon(
-            Icons.search,
-            color: Colors.black45,
-          ),
-          border: InputBorder.none,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.search,
+              size: 20,
+              color: Colors.black45,
+            ),
+            SizedBox(width: 8),
+            Expanded(
+              child: TextField(
+                onChanged: onSearch,
+                textAlign: TextAlign.start,
+                decoration: InputDecoration(
+                  hintText: "Search",
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
