@@ -1,7 +1,12 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class authOption extends StatefulWidget {
-  const authOption();
+  final String stationId;
+
+  authOption({required this.stationId});
 
   @override
   State<authOption> createState() => _authOptionState();
@@ -12,6 +17,60 @@ class _authOptionState extends State<authOption> {
   TextEditingController _policeIdController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+
+  Future<void> CreateUser() async {
+    final policeId = _policeIdController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? authToken = prefs.getString('authToken');
+    String apiEndpoint = 'https://rakshakrita0.vercel.app/api/authority';
+
+    if (policeId.isEmpty || email.isEmpty || password.isEmpty) {
+      return;
+    }
+
+    String roleToSend;
+    if (selectedRole == 'SuperAdmin') {
+      roleToSend = 'Super Admin';
+    } else {
+      roleToSend = selectedRole;
+    }
+
+    try {
+      final Map<String, dynamic> requestData = {
+        'policeId': policeId,
+        'email': email,
+        'password': password,
+        'role': roleToSend,
+      };
+
+      final Map<String, String> headers = {
+        'Content-Type': 'application/json',
+      };
+      if (authToken != null) {
+        headers['authToken'] = authToken;
+      }
+
+      final response = await http.post(
+        Uri.parse(apiEndpoint),
+        headers: headers,
+        body: json.encode(requestData),
+      );
+
+      if (response.statusCode == 200) {
+        print(response.body);
+
+        _policeIdController.clear();
+        _emailController.clear();
+        _passwordController.clear();
+      } else {
+        print('Error: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Exception: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +228,9 @@ class _authOptionState extends State<authOption> {
                       borderRadius: BorderRadius.circular(25.0),
                     )),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    CreateUser();
+                  },
                   child: Text("Create User"),
                 ),
               ),

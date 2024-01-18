@@ -5,6 +5,9 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddQ extends StatefulWidget {
+  final String stationId;
+
+  AddQ({required this.stationId});
   @override
   _AddQState createState() => _AddQState();
 }
@@ -39,13 +42,13 @@ class _AddQState extends State<AddQ> {
         backgroundColor: Color.fromARGB(255, 250, 226, 198),
         flexibleSpace: Center(
           child: Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            padding: EdgeInsets.fromLTRB(15, 27, 0, 0),
             child: Text(
               "Customisable Feedback Form",
               style: TextStyle(
                 color: Colors.orange,
                 fontWeight: FontWeight.bold,
-                fontSize: MediaQuery.of(context).size.height * 0.04,
+                fontSize: MediaQuery.of(context).size.height * 0.02,
               ),
             ),
           ),
@@ -109,6 +112,7 @@ class _AddQState extends State<AddQ> {
         'questionType': question['questionType'],
         'question': question['question'],
         'options': question['questionType'] == 'MCQ' ? question['options'] : [],
+        'stationId': widget.stationId,
       };
     }).toList();
 
@@ -119,6 +123,7 @@ class _AddQState extends State<AddQ> {
 
     Map<String, dynamic> body = {
       'fields': postData,
+      'stationId': widget.stationId,
     };
 
     try {
@@ -158,12 +163,13 @@ class _AddQState extends State<AddQ> {
     Map<String, String> headers = {
       'authToken': authToken,
     };
+    Map<String, String> body = {
+      'stationId': widget.stationId,
+    };
 
     try {
-      final response = await http.get(
-        Uri.parse(apiUrl),
-        headers: headers,
-      );
+      final response = await http.put(Uri.parse(apiUrl),
+          headers: headers, body: jsonEncode(body));
 
       print('GET Request Status Code: ${response.statusCode}');
       print('GET Request Body: ${response.body}');

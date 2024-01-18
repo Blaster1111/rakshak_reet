@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:rakshak_reet/addQCustomisable.dart';
+import 'package:rakshak_reet/addQDefault.dart';
+import 'package:rakshak_reet/auth/authOption.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:convert';
@@ -38,6 +41,7 @@ class HomeDesc extends StatefulWidget {
 }
 
 class _HomeDescState extends State<HomeDesc> {
+  String passAuthOption = "";
   final String apiUrl =
       'https://rakshakrita0.vercel.app/api/authority/feedback';
   double positivePercentage = 0;
@@ -113,6 +117,7 @@ class _HomeDescState extends State<HomeDesc> {
   @override
   void initState() {
     super.initState();
+    getUserRole();
     stationName = widget.stationName;
     fetchData();
     updateSelectedFeedbackCounts(); // Call the fetchData method when the widget is initialized
@@ -121,7 +126,7 @@ class _HomeDescState extends State<HomeDesc> {
   Future<void> fetchData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? authToken = prefs.getString('authToken');
-
+    passAuthOption = widget.stationId;
     if (authToken == null) {
       return;
     }
@@ -256,6 +261,70 @@ class _HomeDescState extends State<HomeDesc> {
     }
   }
 
+  Future<void> _showAddDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Color.fromARGB(255, 250, 226, 198),
+          title: Text('Feedback Form'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  // Navigate to AddQDefault page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          AddQDefault(stationId: passAuthOption),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.orange, // Set the color to match your theme
+                  fixedSize: Size(200, 40), // Set the width and height
+                ),
+                child: Text(
+                  'Default',
+                  style: TextStyle(color: Colors.white), // Text color
+                ),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  // Navigate to AddQCustomisable page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddQ(stationId: passAuthOption),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.orange,
+                  fixedSize: Size(200, 40),
+                ),
+                child: Text(
+                  'Customizable',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<String?> getUserRole() async {
+    SharedPreferences roles = await SharedPreferences.getInstance();
+    String? role = roles.getString('role');
+    print(role);
+    return role;
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<DataModel> data = [
@@ -379,13 +448,12 @@ class _HomeDescState extends State<HomeDesc> {
                     xValueMapper: (FeedbackCategory data, _) => data.category,
                     yValueMapper: (FeedbackCategory data, _) => data.value,
                     pointColorMapper: (FeedbackCategory data, _) => data.color,
-                    borderRadius: BorderRadius.circular(
-                        10), // Adjust the radius as needed
+                    borderRadius: BorderRadius.circular(10),
                     dataLabelSettings: DataLabelSettings(
                       isVisible: true,
                       labelAlignment: ChartDataLabelAlignment.top,
                     ),
-                    borderWidth: 2, // Add a border around the bars
+                    borderWidth: 2,
                   ),
                 ],
               ),
@@ -474,6 +542,50 @@ class _HomeDescState extends State<HomeDesc> {
             ],
           ),
         ),
+      ),
+      floatingActionButton: FutureBuilder<String?>(
+        future: getUserRole(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error123: ${snapshot.error}');
+          } else {
+            String? userRole = snapshot.data;
+            bool isAdmin = userRole == 'Super Admin' || userRole == 'Admin';
+
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (isAdmin)
+                  FloatingActionButton(
+                    onPressed: () {
+                      _showAddDialog(context);
+                    },
+                    backgroundColor: Colors.orange,
+                    heroTag: null,
+                    child: Icon(Icons.add),
+                  ),
+                SizedBox(height: 16),
+                if (userRole == 'Super Admin')
+                  FloatingActionButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext) =>
+                              authOption(stationId: passAuthOption),
+                        ),
+                      );
+                    },
+                    backgroundColor: Colors.orange,
+                    heroTag: null,
+                    child: Icon(Icons.person),
+                  ),
+              ],
+            );
+          }
+        },
       ),
     );
   }

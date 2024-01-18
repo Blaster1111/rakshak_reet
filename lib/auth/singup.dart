@@ -25,7 +25,7 @@ class _SignUpState extends State<SignUp> {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
     String authToken = ""; // Declare authToken variable outside if block
-
+    String role = "";
     if (policeId.isEmpty || email.isEmpty || password.isEmpty) {
       // Display an error message or toast indicating that all fields are required.
       return;
@@ -49,6 +49,7 @@ class _SignUpState extends State<SignUp> {
       if (response.statusCode == 200) {
         print(response.body);
         authToken = json.decode(response.body)['authToken'];
+        role = json.decode(response.body)['role'];
         print(authToken);
 
         _policeIdController.clear();
@@ -57,6 +58,10 @@ class _SignUpState extends State<SignUp> {
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('authToken', authToken);
+
+        final roles = await SharedPreferences.getInstance();
+        await roles.setString('role', role);
+
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => HomePage()));
       } else {

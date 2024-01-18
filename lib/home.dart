@@ -1,8 +1,5 @@
 import 'dart:convert';
-import 'package:rakshak_reet/addQDefault.dart';
 import 'package:flutter/material.dart';
-import 'package:rakshak_reet/addQCustomisable.dart';
-import 'package:rakshak_reet/auth/authOption.dart';
 import 'package:rakshak_reet/auth/singup.dart';
 import 'package:rakshak_reet/homeDesc.dart';
 
@@ -96,62 +93,6 @@ class _HomePageState extends State<HomePage> {
             .toList();
       }
     });
-  }
-
-  Future<void> _showAddDialog(BuildContext context) async {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Color.fromARGB(255, 250, 226, 198),
-          title: Text('Feedback Form'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  // Navigate to AddQDefault page
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => addQDefault(),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.orange, // Set the color to match your theme
-                  fixedSize: Size(200, 40), // Set the width and height
-                ),
-                child: Text(
-                  'Default',
-                  style: TextStyle(color: Colors.white), // Text color
-                ),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  // Navigate to AddQCustomisable page
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AddQ(),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.orange,
-                  fixedSize: Size(200, 40),
-                ),
-                child: Text(
-                  'Customizable',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 
   Widget build(BuildContext context) {
@@ -256,35 +197,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: () {
-              _showAddDialog(context);
-            },
-            backgroundColor: Colors.orange,
-            heroTag: null,
-            child: Icon(Icons.add),
-          ),
-          SizedBox(height: 16),
-          FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext) => authOption(),
-                ),
-              );
-            },
-            backgroundColor: Colors.orange,
-            heroTag: null,
-            child: Icon(Icons.person),
-          ),
-        ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
     );
   }
 
