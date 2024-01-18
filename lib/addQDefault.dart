@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddQDefault extends StatefulWidget {
-  final String stationId;
+  late final String stationId; // Mark it as final
 
   AddQDefault({required this.stationId});
 
@@ -17,11 +17,11 @@ class _AddQState extends State<AddQDefault> {
   List<String> types = ['Short Answer', 'MCQ'];
   List<Map<String, dynamic>> questions = [];
   final String apiUrl = 'https://rakshakrita0.vercel.app/api/authority/form';
-
+  List<String> selectedStationId = ['sbi', 'star', 'cedar', 'idea', 'eec'];
   String successMessage = '';
   TextEditingController questionController = TextEditingController();
-
-  int? editingIndex; // Index of the question being edited
+  int selectedStationIndex = 0;
+  int? editingIndex;
 
   @override
   void initState() {
@@ -96,7 +96,7 @@ class _AddQState extends State<AddQDefault> {
       'authToken': authToken,
     };
     Map<String, String> body = {
-      'stationId': "sbi",
+      'stationId': selectedStationId[selectedStationIndex],
     };
 
     try {
@@ -162,7 +162,28 @@ class _AddQState extends State<AddQDefault> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ... existing code ...
+              DropdownButton<int>(
+                value: selectedStationIndex,
+                onChanged: (int? selectedIndex) {
+                  if (selectedIndex != null) {
+                    setState(() {
+                      selectedStationIndex = selectedIndex;
+                      fetchFormData();
+                    });
+                  }
+                },
+                items: ['sbi', 'star', 'cedar', 'idea', 'eec']
+                    .asMap()
+                    .entries
+                    .map((entry) {
+                  int index = entry.key;
+                  String station = entry.value;
+                  return DropdownMenuItem<int>(
+                    value: index,
+                    child: Text(station),
+                  );
+                }).toList(),
+              ),
               QuestionList(
                 questions: questions,
                 onEdit: _editQuestion,
@@ -177,17 +198,9 @@ class _AddQState extends State<AddQDefault> {
                   });
                 },
               ),
-              // ... existing code ...
             ],
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Handle floating action button press
-        },
-        backgroundColor: Colors.orange,
-        child: Icon(Icons.add),
       ),
     );
   }
@@ -239,8 +252,7 @@ class QuestionList extends StatelessWidget {
                         onSave();
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            Colors.orange, // Set the background color here
+                        backgroundColor: Colors.orange,
                       ),
                       child: Text('Save'),
                     )
