@@ -162,27 +162,34 @@ class _AddQState extends State<AddQDefault> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              DropdownButton<int>(
-                value: selectedStationIndex,
-                onChanged: (int? selectedIndex) {
-                  if (selectedIndex != null) {
-                    setState(() {
-                      selectedStationIndex = selectedIndex;
-                      fetchFormData();
-                    });
-                  }
-                },
-                items: ['sbi', 'star', 'cedar', 'idea', 'eec']
-                    .asMap()
-                    .entries
-                    .map((entry) {
-                  int index = entry.key;
-                  String station = entry.value;
-                  return DropdownMenuItem<int>(
-                    value: index,
-                    child: Text(station),
-                  );
-                }).toList(),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.black),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: DropdownButton<int>(
+                  value: selectedStationIndex,
+                  onChanged: (int? selectedIndex) {
+                    if (selectedIndex != null) {
+                      setState(() {
+                        selectedStationIndex = selectedIndex;
+                        fetchFormData();
+                      });
+                    }
+                  },
+                  items: ['sbi', 'star', 'cedar', 'idea', 'eec']
+                      .asMap()
+                      .entries
+                      .map((entry) {
+                    int index = entry.key;
+                    String station = entry.value;
+                    return DropdownMenuItem<int>(
+                      value: index,
+                      child: Text(station),
+                    );
+                  }).toList(),
+                ),
               ),
               QuestionList(
                 questions: questions,

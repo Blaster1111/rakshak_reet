@@ -217,6 +217,9 @@ class _authOptionState extends State<authOption> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: MediaQuery.sizeOf(context).height * 0.05,
+              ),
               Container(
                 width: MediaQuery.of(context).size.width * 0.8,
                 height: MediaQuery.of(context).size.height * 0.055,
